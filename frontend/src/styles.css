@@ -76,14 +76,32 @@ button {
   display: grid;
   grid-template-columns: repeat(3, minmax(180px, 1fr));
   gap: 18px;
+  margin-bottom: 18px;
+}
+
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 18px;
   margin-bottom: 28px;
 }
 
-.stat-card {
+.stat-card,
+.mini-card {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
+}
+
+.mini-card span {
+  color: var(--muted);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.mini-card strong {
+  font-size: 1.6rem;
 }
 
 .stat-card span {

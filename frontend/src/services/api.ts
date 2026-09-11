@@ -13,3 +13,27 @@ export async function getAssessments() {
   }
   return response.json();
 }
+
+export async function getMonitoringSummary() {
+  const response = await fetch('http://localhost:8000/api/monitoring/summary');
+  if (!response.ok) {
+    throw new Error('Monitoring summary fetch failed');
+  }
+  return response.json();
+}
+
+export async function getRemediationPlans() {
+  const response = await fetch('http://localhost:8000/api/remediation/plans');
+  if (!response.ok) {
+    throw new Error('Remediation plans fetch failed');
+  }
+  return response.json();
+}
+
+export async function getRetests() {
+  const response = await fetch('http://localhost:8000/api/retests');
+  if (!response.ok) {
+    throw new Error('Retests fetch failed');
+  }
+  return response.json();
+}
