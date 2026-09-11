@@ -1,0 +1,141 @@
+:root {
+  color-scheme: dark;
+  --bg: #08111d;
+  --panel: #101b2d;
+  --panel-alt: #16253d;
+  --text: #e5edf9;
+  --muted: #9aaec8;
+  --border: rgba(148, 163, 184, 0.2);
+  --critical: #f87171;
+  --high: #fb923c;
+  --medium: #facc15;
+  --low: #34d399;
+  --blue: #60a5fa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+  min-width: 100%;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  min-height: 100vh;
+}
+
+button {
+  background: var(--blue);
+  border: 0;
+  border-radius: 8px;
+  color: white;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dashboard-shell {
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  color: var(--blue);
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  margin: 0 0 8px;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.status-pill {
+  background: rgba(96, 165, 250, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: #dbeafe;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stat-card span {
+  display: block;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.stat-card strong {
+  font-size: 2.4rem;
+}
+
+.critical { border-top: 3px solid var(--critical); }
+.high { border-top: 3px solid var(--high); }
+.medium { border-top: 3px solid var(--medium); }
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.panel h2 {
+  margin-top: 0;
+}
+
+.assessment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: end;
+  height: 140px;
+  gap: 14px;
+  padding-top: 24px;
+}
+
+.chart-bars span {
+  display: block;
+  flex: 1;
+  background: linear-gradient(180deg, #60a5fa, #2563eb);
+  border-radius: 10px 10px 0 0;
+  min-height: 24px;
+}
