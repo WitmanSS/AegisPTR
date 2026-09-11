@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <style>
+    .bg { fill: #0f1724 }
+    .panel { fill: #0b1220; stroke:#203040; stroke-width:1 }
+    .card { fill:#0f1724; stroke:#2b3b4b; stroke-width:1 }
+    .muted { fill:#9fb1c9; font-family: Arial; font-size:12px }
+    .title { fill:#e6f0ff; font-family: Arial; font-size:14px; font-weight:700 }
+    .badge { fill:#1f2937; stroke:#334b63; stroke-width:1 }
+    .sev-crit { fill:#ff5c5c }
+    .sev-high { fill:#ff9f43 }
+    .sev-med { fill:#ffd166 }
+    .sev-low { fill:#a3e635 }
+    .box { fill:none; stroke:#335060; stroke-dasharray:4 }
+  </style>
+
+  <rect x="0" y="0" width="1200" height="800" fill="#071022" />
+
+  <!-- Topbar -->
+  <rect x="0" y="0" width="1200" height="56" fill="#071428" />
+  <text x="16" y="34" class="title">AegisPTR — Findings Explorer</text>
+  <rect x="920" y="10" width="240" height="36" rx="6" fill="#07132a" stroke="#2e4a64" />
+  <text x="936" y="34" class="muted">Search findings, assets, CVE...</text>
+
+  <!-- Left rail -->
+  <rect x="0" y="56" width="200" height="744" fill="#061022" stroke="#123" />
+  <text x="18" y="88" class="muted">Navigation</text>
+  <text x="18" y="110" class="muted">• Dashboard</text>
+  <text x="18" y="130" class="muted">• Assessments</text>
+  <text x="18" y="150" class="muted">• Attack Surface</text>
+  <text x="18" y="170" class="muted">• Pentest Ops</text>
+  <text x="18" y="190" class="muted">• Findings</text>
+
+  <!-- Main: left column - Findings List -->
+  <rect x="210" y="76" width="420" height="700" class="panel" rx="6"/>
+  <text x="224" y="100" class="title">Findings</text>
+  <text x="224" y="120" class="muted">Filters: Severity · Trust · Asset · Technology · Date</text>
+
+  <!-- sample list rows -->
+  <!-- header row -->
+  <rect x="224" y="134" width="392" height="36" fill="#081426" stroke="#243b50" rx="4"/>
+  <text x="236" y="156" class="muted">Severity</text>
+  <text x="320" y="156" class="muted">Title</text>
+  <text x="560" y="156" class="muted">Asset</text>
+  <text x="700" y="156" class="muted">Risk</text>
+
+  <!-- rows -->
+  <g>
+    <rect x="224" y="174" width="392" height="64" class="card" rx="6"/>
+    <circle cx="242" cy="206" r="10" class="sev-crit"/>
+    <text x="264" y="212" class="title">SQL Injection — /login</text>
+    <text x="564" y="212" class="muted">web-01</text>
+    <text x="700" y="212" class="muted">88</text>
+    <text x="820" y="212" class="muted">Confidence: 82%</text>
+  </g>
+
+  <g>
+    <rect x="224" y="246" width="392" height="64" class="card" rx="6"/>
+    <circle cx="242" cy="278" r="10" class="sev-high"/>
+    <text x="264" y="284" class="title">Outdated TLS — api.local</text>
+    <text x="564" y="284" class="muted">api-02</text>
+    <text x="700" y="284" class="muted">54</text>
+    <text x="820" y="284" class="muted">Confidence: 67%</text>
+  </g>
+
+  <!-- Right: Detail Panel -->
+  <rect x="650" y="76" width="520" height="700" class="panel" rx="6"/>
+  <text x="664" y="100" class="title">Finding Detail</text>
+
+  <!-- Summary Header -->
+  <rect x="664" y="116" width="488" height="88" fill="#071826" stroke="#27445b" rx="6"/>
+  <text x="684" y="140" class="title">SQL Injection — /login</text>
+  <text x="684" y="160" class="muted">Asset: web-01 · First seen: 2026-09-11 · Status: OPEN</text>
+  <rect x="1000" y="128" width="136" height="28" rx="4" fill="#0f2a2a" stroke="#2a5a5a"/>
+  <text x="1020" y="147" class="muted">Assign</text>
+  <rect x="1000" y="160" width="136" height="28" rx="4" fill="#21302f" stroke="#2a5a5a"/>
+  <text x="1020" y="179" class="muted">Create Remediation</text>
+
+  <!-- Why Important visual (stacked bars) -->
+  <rect x="684" y="216" width="468" height="120" fill="#071426" stroke="#234" rx="6"/>
+  <text x="700" y="236" class="muted">Why is this important?</text>
+  <rect x="700" y="252" width="200" height="16" fill="#ff5c5c"/>
+  <text x="912" y="264" class="muted">Internet Exposure (+20)</text>
+  <rect x="700" y="276" width="160" height="16" fill="#ff9f43"/>
+  <text x="872" y="288" class="muted">Known Exploit (+18)</text>
+  <rect x="700" y="300" width="120" height="16" fill="#ffd166"/>
+  <text x="832" y="312" class="muted">Asset Criticality (+15)</text>
+
+  <!-- Evidence timeline -->
+  <rect x="684" y="352" width="468" height="220" fill="#071426" stroke="#234" rx="6"/>
+  <text x="700" y="372" class="muted">Evidence Timeline</text>
+  <line x1="700" y1="388" x2="1140" y2="388" stroke="#2f4b62" stroke-width="2"/>
+  <g>
+    <circle cx="740" cy="388" r="6" fill="#4dc9ff"/>
+    <text x="756" y="392" class="muted">2026-09-11 12:34 — nuclei detected CVE-XXXX /login</text>
+  </g>
+  <g>
+    <circle cx="880" cy="388" r="6" fill="#7bd389"/>
+    <text x="896" y="392" class="muted">2026-09-11 12:36 — zap reported injection payload</text>
+  </g>
+
+  <!-- Bottom: History and Actions -->
+  <rect x="210" y="680" width="420" height="96" fill="#071428" stroke="#1e3446" rx="6"/>
+  <text x="224" y="704" class="muted">Bulk actions: Select · Assign · Create remediation · Export</text>
+
+  <rect x="650" y="600" width="520" height="176" fill="#071426" stroke="#223" rx="6"/>
+  <text x="664" y="624" class="muted">History & Audit</text>
+  <text x="684" y="644" class="muted">2026-09-11 12:34 — finding.created (nuclei)</text>
+  <text x="684" y="662" class="muted">2026-09-11 12:36 — finding.correlated (engine v0.3)</text>
+  <text x="684" y="680" class="muted">2026-09-11 12:40 — assigned to security-team</text>
+
+  <!-- Annotations box -->
+  <rect x="1140" y="740" width="40" height="40" class="box"/>
+  <text x="1146" y="764" class="muted">Notes</text>
+
+</svg>

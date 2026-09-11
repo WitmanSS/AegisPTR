@@ -1,0 +1,192 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "AegisPTR Findings & Events Schemas",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "AssetRef": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "business_unit": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["id"]
+      },
+      "Observation": {
+        "type": "object",
+        "properties": {
+          "obs_id": { "type": "string", "description": "Unique observation id (tool-level)" },
+          "tool": { "type": "string" },
+          "tool_version": { "type": "string" },
+          "assessment_id": { "type": "string" },
+          "asset": { "$ref": "#/components/schemas/AssetRef" },
+          "raw_output_url": { "type": "string", "format": "uri" },
+          "parsed": { "type": "object", "description": "Arbitrary parsed fields (fingerprint, path, port)" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "trust": { "type": "string", "enum": ["TOOL_OBSERVED", "VERIFIED", "AI_INFERRED", "USER_PROVIDED", "UNVERIFIED"] },
+          "meta": { "type": "object" }
+        },
+        "required": ["obs_id", "tool", "timestamp"]
+      },
+      "CorrelationCandidate": {
+        "type": "object",
+        "properties": {
+          "correlation_id": { "type": "string" },
+          "title": { "type": "string" },
+          "asset": { "$ref": "#/components/schemas/AssetRef" },
+          "risk_score": { "type": "number", "format": "float" },
+          "confidence": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "sources": { "type": "array", "items": { "$ref": "#/components/schemas/Observation" } },
+          "matched_rules": { "type": "array", "items": { "type": "string" } },
+          "fuzzy_score": { "type": "number" }
+        },
+        "required": ["correlation_id", "title", "sources"]
+      },
+      "Finding": {
+        "type": "object",
+        "properties": {
+          "finding_id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+          "risk_score": { "type": "number", "format": "float" },
+          "confidence": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "trust": { "type": "string", "enum": ["VERIFIED", "TOOL_OBSERVED", "CORRELATED", "AI_INFERRED", "USER_PROVIDED", "UNVERIFIED"] },
+          "asset": { "$ref": "#/components/schemas/AssetRef" },
+          "attack_vector": { "type": "string" },
+          "cves": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "string" }, "cvss": { "type": "number" }, "url": { "type": "string" } } } },
+          "cwe": { "type": "array", "items": { "type": "string" } },
+          "cvss": { "type": "number" },
+          "exploitability": { "type": "string" },
+          "status": { "type": "string", "enum": ["OPEN", "IN_PROGRESS", "REMEDIATION_PENDING", "REMEDIATED", "RETESTING", "VERIFIED", "CLOSED"] },
+          "owner": { "type": "object", "properties": { "id": { "type": "string" }, "display_name": { "type": "string" } } },
+          "first_seen": { "type": "string", "format": "date-time" },
+          "last_seen": { "type": "string", "format": "date-time" },
+          "sources": { "type": "array", "items": { "$ref": "#/components/schemas/Observation" } },
+          "correlation": { "type": "object", "properties": { "correlation_id": { "type": "string" }, "score": { "type": "number" }, "rules": { "type": "array", "items": { "type": "string" } }, "merged_from": { "type": "array", "items": { "type": "string" } } } },
+          "remediation": { "type": "object", "properties": { "remediation_id": { "type": "string" }, "status": { "type": "string" }, "expected_risk_reduction": { "type": "number" }, "effort_estimate": { "type": "string" } } },
+          "retest": { "type": "object", "properties": { "history": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "string" }, "status": { "type": "string" }, "timestamp": { "type": "string", "format": "date-time" } } } } } },
+          "audit": { "type": "array", "items": { "type": "object", "properties": { "event": { "type": "string" }, "actor": { "type": "string" }, "timestamp": { "type": "string", "format": "date-time" } } } }
+        },
+        "required": ["finding_id", "title", "severity", "asset", "sources"]
+      },
+      "Paging": {
+        "type": "object",
+        "properties": { "page": { "type": "integer" }, "size": { "type": "integer" }, "total": { "type": "integer" } }
+      },
+      "FindingsListResponse": {
+        "type": "object",
+        "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }, "page": { "$ref": "#/components/schemas/Paging" } }
+      },
+      "ToolObservationCreatedEvent": {
+        "type": "object",
+        "properties": { "event": { "type": "string", "enum": ["tool.observation.created"] }, "payload": { "$ref": "#/components/schemas/Observation" } },
+        "required": ["event", "payload"]
+      },
+      "FindingCorrelatedEvent": {
+        "type": "object",
+        "properties": { "event": { "type": "string", "enum": ["finding.correlated"] }, "payload": { "$ref": "#/components/schemas/CorrelationCandidate" } },
+        "required": ["event", "payload"]
+      },
+      "FindingCreatedEvent": {
+        "type": "object",
+        "properties": { "event": { "type": "string", "enum": ["finding.created"] }, "payload": { "$ref": "#/components/schemas/Finding" } },
+        "required": ["event", "payload"]
+      },
+      "FindingUpdatedEvent": {
+        "type": "object",
+        "properties": { "event": { "type": "string", "enum": ["finding.updated"] }, "payload": { "type": "object", "properties": { "finding_id": { "type": "string" }, "changes": { "type": "object" }, "actor": { "type": "string" }, "timestamp": { "type": "string", "format": "date-time" } } } },
+        "required": ["event", "payload"]
+      },
+      "RemediationCreatedEvent": {
+        "type": "object",
+        "properties": { "event": { "type": "string", "enum": ["remediation.created"] }, "payload": { "type": "object", "properties": { "remediation_id": { "type": "string" }, "finding_id": { "type": "string" }, "created_by": { "type": "string" }, "assignee": { "type": "string" }, "expected_risk_reduction": { "type": "number" }, "effort_estimate": { "type": "string" }, "status": { "type": "string" }, "attachments": { "type": "array", "items": { "type": "string" } } } } },
+        "required": ["event", "payload"]
+      },
+      "RetestCompletedEvent": {
+        "type": "object",
+        "properties": { "event": { "type": "string", "enum": ["retest.completed"] }, "payload": { "type": "object", "properties": { "retest_id": { "type": "string" }, "finding_id": { "type": "string" }, "status": { "type": "string" }, "evidence": { "type": "array", "items": { "type": "string" } }, "timestamp": { "type": "string", "format": "date-time" } } } },
+        "required": ["event", "payload"]
+      },
+      "RiskRecalculatedEvent": {
+        "type": "object",
+        "properties": { "event": { "type": "string", "enum": ["risk.recalculated"] }, "payload": { "type": "object", "properties": { "scope": { "type": "string", "enum": ["org", "assessment"] }, "id": { "type": "string" }, "old_score": { "type": "number" }, "new_score": { "type": "number" }, "delta": { "type": "number" }, "explain": { "type": "array", "items": { "type": "object", "properties": { "factor": { "type": "string" }, "value": { "type": "number" } } } }, "timestamp": { "type": "string", "format": "date-time" } } } },
+        "required": ["event", "payload"]
+      }
+    },
+    "parameters": {
+      "FindingIdParam": {
+        "name": "finding_id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    }
+  },
+  "paths": {
+    "/api/findings": {
+      "get": {
+        "summary": "List findings (paged)",
+        "parameters": [
+          { "in": "query", "name": "page", "schema": { "type": "integer" } },
+          { "in": "query", "name": "size", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "paged findings",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FindingsListResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/findings/{finding_id}": {
+      "get": {
+        "summary": "Get full finding",
+        "parameters": [ { "$ref": "#/components/parameters/FindingIdParam" } ],
+        "responses": {
+          "200": {
+            "description": "finding",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Finding" } } }
+          }
+        }
+      }
+    },
+    "/api/remediations": {
+      "post": {
+        "summary": "Create remediation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "finding_id": { "type": "string" },
+                  "assignee": { "type": "string" },
+                  "expected_risk_reduction": { "type": "number" },
+                  "effort_estimate": { "type": "string" },
+                  "attachments": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "remediation created" } }
+      }
+    },
+    "/ws/events": {
+      "get": {
+        "summary": "WebSocket endpoint (protocol-level) — subscribe to event topics",
+        "responses": { "101": { "description": "WebSocket handshake" } }
+      }
+    }
+  }
+}
