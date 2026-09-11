@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+
+from app.api.deps import get_current_user, require_permission
 
 from app.services.remediation_engine import remediation_engine
 
@@ -8,12 +10,12 @@ router = APIRouter(prefix="/remediation", tags=["remediation"])
 
 
 @router.get("/plans")
-async def list_remediation_plans() -> list[dict]:
+async def list_remediation_plans(user=Depends(require_permission("read"))) -> list[dict]:
     return remediation_engine.list_plans()
 
 
 @router.post("/generate")
-async def generate_remediation(payload: dict) -> dict:
+async def generate_remediation(payload: dict, user=Depends(require_permission("write"))) -> dict:
     assessment_id = str(payload.get("assessment_id", "")).strip()
     finding_ids = payload.get("finding_ids", [])
     assignee = str(payload.get("assignee", "security-team")).strip() or "security-team"

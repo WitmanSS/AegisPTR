@@ -3,6 +3,7 @@ from __future__ import annotations
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException
+from app.api.deps import require_permission
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -15,7 +16,7 @@ router = APIRouter(prefix="/assessments", tags=["assessments"])
 
 
 @router.get("", response_model=list[AssessmentRead])
-async def list_assessments(db: Session = Depends(get_db)) -> list[AssessmentRead]:
+async def list_assessments(db: Session = Depends(get_db), user=Depends(require_permission("read"))) -> list[AssessmentRead]:
     assessments = db.execute(select(Assessment).order_by(Assessment.created_at.desc())).scalars().all()
     return [
         AssessmentRead(
@@ -38,6 +39,7 @@ async def list_assessments(db: Session = Depends(get_db)) -> list[AssessmentRead
 async def create_assessment(
     payload: AssessmentCreate,
     db: Session = Depends(get_db),
+    user=Depends(require_permission("write")),
 ) -> AssessmentRead:
     assessment = Assessment(
         name=payload.name,
@@ -93,6 +95,7 @@ async def authorize_assessment(
     assessment_id: str,
     body: dict,
     db: Session = Depends(get_db),
+    user=Depends(require_permission("write")),
 ) -> dict:
     assessment = db.get(Assessment, assessment_id)
     if assessment is None:
@@ -117,6 +120,7 @@ async def create_assessment_task(
     assessment_id: str,
     body: dict,
     db: Session = Depends(get_db),
+    user=Depends(require_permission("write")),
 ) -> dict:
     assessment = db.get(Assessment, assessment_id)
     if assessment is None:

@@ -7,6 +7,8 @@ import jwt
 import bcrypt as _bcrypt
 
 from app.core.config import settings
+from app.core.database import SessionLocal
+from app.models.identity import User
 
 
 ROLE_PERMISSIONS = {
@@ -30,11 +32,32 @@ def register_user(username: str, password: str, role: str = "pentester") -> dict
         "role": role,
         "created_at": datetime.utcnow().isoformat(),
     }
-    _USERS[username] = user
+    # persist to database if available
+    try:
+        db = SessionLocal()
+        # ensure role exists is handled elsewhere; we store username and hash
+        db_user = User(username=username, password_hash=hashed)
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+    except Exception:
+        # fall back to in-memory if DB not available
+        _USERS[username] = user
     return {"username": username, "role": role}
 
 
 def authenticate_user(username: str, password: str) -> dict[str, Any] | None:
+    # Try DB first
+    try:
+        db = SessionLocal()
+        db_user = db.query(User).filter(User.username == username).first()
+        if db_user:
+            ok = _bcrypt.checkpw(password.encode("utf-8"), db_user.password_hash.encode("utf-8"))
+            if ok:
+                return {"username": db_user.username, "role": db_user.role.name if db_user.role else "pentester"}
+            return None
+    except Exception:
+        pass
     user = _USERS.get(username)
     if not user:
         return None

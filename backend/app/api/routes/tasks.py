@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+
+from app.api.deps import require_permission
 
 from app.services.orchestrator import ToolTask, orchestrator
 
@@ -10,7 +12,7 @@ router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
 @router.get("")
-async def list_tasks() -> list[dict]:
+async def list_tasks(user=Depends(require_permission("read"))) -> list[dict]:
     queued = []
     for tasks in orchestrator._queues.values():
         for task in tasks:
@@ -25,7 +27,7 @@ async def list_tasks() -> list[dict]:
 
 
 @router.post("")
-async def create_task(payload: dict) -> dict:
+async def create_task(payload: dict, user=Depends(require_permission("write"))) -> dict:
     assessment_id = str(payload.get("assessment_id", "")).strip()
     tool_id = str(payload.get("tool_id", "nmap")).strip()
     target = str(payload.get("target", "")).strip()
@@ -51,7 +53,7 @@ async def create_task(payload: dict) -> dict:
 
 
 @router.post("/{task_id}/execute")
-async def execute_task(task_id: str) -> dict:
+async def execute_task(task_id: str, user=Depends(require_permission("write"))) -> dict:
     task = None
     for queue in orchestrator._queues.values():
         for item in queue:

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Header
 
-from app.services.auth_service import authenticate_user, can_access, create_access_token, decode_access_token, register_user
+from app.services.auth_service import authenticate_user, create_access_token, register_user
+from app.api.deps import require_permission
 
 router = APIRouter(tags=["auth"])
 
@@ -45,14 +46,5 @@ async def me(authorization: str = Header(default="")) -> dict:
 
 
 @router.get("/admin/metrics")
-async def admin_metrics(authorization: str = Header(default="")) -> dict:
-    if not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing bearer token")
-    token = authorization.split(" ", 1)[1]
-    try:
-        payload = decode_access_token(token)
-    except Exception as exc:  # pragma: no cover - jwt-specific branch
-        raise HTTPException(status_code=401, detail="Invalid token") from exc
-    if not can_access(payload["role"], "manage_users"):
-        raise HTTPException(status_code=403, detail="Forbidden")
+async def admin_metrics(user=Depends(require_permission("manage_users"))) -> dict:
     return {"status": "ok", "metrics": {"assessments": 22, "findings": 148}}

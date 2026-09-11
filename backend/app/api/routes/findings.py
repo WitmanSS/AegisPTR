@@ -3,6 +3,7 @@ from __future__ import annotations
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException
+from app.api.deps import require_permission
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -16,7 +17,7 @@ _FALLBACK_FINDINGS: list[dict] = []
 
 
 @router.get("")
-async def list_findings(db: Session = Depends(get_db)) -> list[dict]:
+async def list_findings(db: Session = Depends(get_db), user=Depends(require_permission("read"))) -> list[dict]:
     if not _FALLBACK_FINDINGS:
         rows = db.execute(select(Assessment)).scalars().all()
         if not rows:
@@ -40,6 +41,7 @@ async def list_findings(db: Session = Depends(get_db)) -> list[dict]:
 async def ingest_findings(
     payload: dict,
     db: Session = Depends(get_db),
+    user=Depends(require_permission("write")),
 ) -> dict:
     assessment_id = str(payload.get("assessment_id", "")).strip()
     if not assessment_id:

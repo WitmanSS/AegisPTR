@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+
+from app.api.deps import require_permission
 
 from app.services.retest_engine import retest_engine
 
@@ -8,12 +10,12 @@ router = APIRouter(prefix="/retests", tags=["retests"])
 
 
 @router.get("")
-async def list_retests() -> list[dict]:
+async def list_retests(user=Depends(require_permission("read"))) -> list[dict]:
     return retest_engine.list_records()
 
 
 @router.post("")
-async def create_retest(payload: dict) -> dict:
+async def create_retest(payload: dict, user=Depends(require_permission("write"))) -> dict:
     assessment_id = str(payload.get("assessment_id", "")).strip()
     finding_id = str(payload.get("finding_id", "")).strip()
     retest_type = str(payload.get("retest_type", "POST_REMEDIATION")).strip() or "POST_REMEDIATION"
@@ -29,7 +31,7 @@ async def create_retest(payload: dict) -> dict:
 
 
 @router.post("/{retest_id}/validate")
-async def validate_retest(retest_id: str, payload: dict) -> dict:
+async def validate_retest(retest_id: str, payload: dict, user=Depends(require_permission("write"))) -> dict:
     passed = bool(payload.get("passed", False))
     evidence = payload.get("evidence", [])
     if not isinstance(evidence, list):
