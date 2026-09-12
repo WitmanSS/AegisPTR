@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Any, Dict
 
-from backend.app.api.deps import require_permission
-from backend.app.core.database import get_db
-from backend.app.handlers.event_handlers import handle_event
+from app.api.deps import require_permission
+from app.core.database import get_db
+from app.handlers.event_handlers import handle_event
 
 router = APIRouter(prefix="/api/events", tags=["events"])
 

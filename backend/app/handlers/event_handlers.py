@@ -6,12 +6,12 @@ import json
 
 try:
     # import the AuditLog model from identity models
-    from backend.app.models.identity import AuditLog
+    from app.models.identity import AuditLog
 except Exception:
     AuditLog = None
 
 try:
-    from backend.app.models.finding import Finding
+    from app.models.finding import Finding
 except Exception:
     Finding = None
 
@@ -75,7 +75,7 @@ def handle_event(db: Session, event: Dict[str, Any]):
         created_finding = _create_finding_from_event(db, event)
         # publish downstream event for consumers/workers
         try:
-            from backend.app.events.publisher import publish_event
+            from app.events.publisher import publish_event
 
             publish_event("finding.created", {"type": "finding.created", "data": getattr(created_finding, "id", created_finding) or created_finding})
         except Exception:

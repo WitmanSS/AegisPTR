@@ -94,7 +94,7 @@ def test_worker_loop_one_message(monkeypatch):
     fake_redis = FakeRedis(pubsub)
 
     # monkeypatch Publisher._ensure_redis to return our fake redis
-    from backend.app.events import publisher as pubmod
+    from app.events import publisher as pubmod
 
     monkeypatch.setattr(pubmod.Publisher, "_ensure_redis", lambda self: fake_redis)
 

@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import Any
 
-from backend.app.api.deps import require_permission
-from backend.app.core.database import get_db
-from backend.app.services.target_service import parse_bulk, validate_target, normalize_target
-from backend.app.schemas.target import (
+from app.api.deps import require_permission
+from app.core.database import get_db
+from app.services.target_service import parse_bulk, validate_target, normalize_target
+from app.schemas.target import (
     BulkParseRequest,
     BulkParseResponse,
     TargetCreate,
@@ -34,7 +34,7 @@ def validate_single(target: dict, db: Session = Depends(get_db), _=Depends(requi
 
 @router.post("/", response_model=TargetOut)
 def create_target(t: TargetCreate, db: Session = Depends(get_db), _=Depends(require_permission("write"))):
-    from backend.app.models.target import Target
+    from app.models.target import Target
 
     obj = Target(
         original=t.original,
@@ -64,7 +64,7 @@ def create_target(t: TargetCreate, db: Session = Depends(get_db), _=Depends(requ
 
 @router.get("/")
 def list_targets(limit: int = 50, offset: int = 0, db: Session = Depends(get_db), _=Depends(require_permission("read"))):
-    from backend.app.models.target import Target
+    from app.models.target import Target
 
     q = db.query(Target).limit(limit).offset(offset).all()
     return q
@@ -74,7 +74,7 @@ def list_targets(limit: int = 50, offset: int = 0, db: Session = Depends(get_db)
 @router.post("/bulk", response_model=BulkCreateResponse)
 def bulk_create(body: BulkCreateRequest, db: Session = Depends(get_db), _=Depends(require_permission("write"))):
     """Create multiple targets transactionally. Returns per-item status summary."""
-    from backend.app.models.target import Target, TargetHistory
+    from app.models.target import Target, TargetHistory
     items = body.items
     results = []
     created = 0

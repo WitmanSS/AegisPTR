@@ -12,21 +12,21 @@ from typing import Any, Dict
 
 from sqlalchemy.orm import Session
 
-from backend.app.events.publisher import Publisher
+from app.events.publisher import Publisher
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
 def get_db_session() -> Session:
-    from backend.app.core.database import SessionLocal
+    from app.core.database import SessionLocal
 
     return SessionLocal()
 
 
 def enrich_finding(db: Session, finding_id: str) -> Dict[str, Any]:
     """Perform simple enrichment: set a derived risk_score and add an enrichment note."""
-    from backend.app.models.finding import Finding
+    from app.models.finding import Finding
 
     f = db.query(Finding).filter(Finding.id == finding_id).first()
     if not f:
