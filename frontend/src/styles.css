@@ -157,3 +157,74 @@ button {
   border-radius: 10px 10px 0 0;
   min-height: 24px;
 }
+
+/* App shell and top navigation */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-nav {
+  display: flex;
+  gap: 18px;
+  padding: 12px 24px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.nav-link {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.nav-link:hover { color: var(--text); background: rgba(255,255,255,0.02); }
+
+.nav-link.active { color: var(--text); background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.12); }
+
+.app-main { padding: 24px; }
+
+textarea { font-family: inherit; }
+
+/* target bulk uploader tweaks */
+.muted { color: var(--muted); }
+table { width: 100%; border-collapse: collapse; }
+table th, table td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+/* Modal & table tweaks for TargetBulkUploader */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 60;
+}
+
+.modal {
+  background: var(--panel);
+  padding: 18px;
+  border-radius: 10px;
+  width: 640px;
+  max-height: 80vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 40px rgba(2,6,23,0.6);
+}
+
+.modal h4 { margin: 0 0 8px 0; }
+.modal-list { max-height: 280px; overflow: auto; border: 1px solid rgba(255,255,255,0.02); border-radius: 6px; padding: 8px; }
+.modal-actions { margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end; }
+.btn-cancel { background: transparent; color: var(--muted); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; }
+
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
+.table-input { width: 100%; padding: 6px 8px; border-radius: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.03); color: var(--text); }
+.table-select { padding: 6px 8px; border-radius: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.03); color: var(--text); }
+.table-checkbox { width: 16px; height: 16px; }
+.valid { color: #34d399; font-weight: 600; }
+.invalid { color: #f87171; font-weight: 600; }
+

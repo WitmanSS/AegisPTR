@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .bg { fill: #f6f8fa; }
+    .panel { fill: #ffffff; stroke: #e1e4e8; }
+    .title { font: 600 18px/1.2 Arial, sans-serif; fill: #111827; }
+    .muted { font: 400 12px/1.2 Arial, sans-serif; fill: #6b7280; }
+    .button { fill: #0366d6; cursor: pointer; }
+    .btn-text { fill: #fff; font: 600 13px/1 Arial, sans-serif; }
+    .table-head { fill: #f3f4f6; stroke: #e5e7eb; }
+    .status-ok { fill: #10b981; }
+    .status-warn { fill: #f59e0b; }
+    .status-bad { fill: #ef4444; }
+  </style>
+
+  <rect class="bg" x="0" y="0" width="1200" height="720" />
+
+  <!-- Left: Paste Input -->
+  <g transform="translate(24,24)">
+    <rect class="panel" x="0" y="0" width="540" height="672" rx="8" />
+    <text class="title" x="20" y="34">Target Scope — Bulk Paste</text>
+    <text class="muted" x="20" y="56">Paste targets (one per line). We'll parse, validate and show a preview.</text>
+
+    <!-- textarea placeholder -->
+    <rect x="20" y="80" width="500" height="380" rx="6" fill="#fbfdff" stroke="#e6eef8" />
+    <text class="muted" x="32" y="102">Example:</text>
+    <text class="muted" x="32" y="122">192.168.1.10</text>
+    <text class="muted" x="32" y="140">10.10.10.0/24</text>
+    <text class="muted" x="32" y="158">https://portal.example.com/v1</text>
+
+    <!-- parse options -->
+    <rect x="20" y="480" width="160" height="36" rx="6" fill="#fff" stroke="#e5e7eb" />
+    <text class="muted" x="32" y="504">Resolve DNS</text>
+    <rect x="200" y="480" width="160" height="36" rx="6" fill="#fff" stroke="#e5e7eb" />
+    <text class="muted" x="212" y="504">Remove Duplicates</text>
+
+    <!-- buttons -->
+    <g transform="translate(20,540)">
+      <rect class="button" x="0" y="0" width="120" height="40" rx="6" />
+      <text class="btn-text" x="40" y="26">Parse Preview</text>
+    </g>
+    <g transform="translate(156,540)">
+      <rect x="0" y="0" width="120" height="40" rx="6" fill="#e5e7eb" />
+      <text class="muted" x="24" y="26">Clear</text>
+    </g>
+  </g>
+
+  <!-- Right: Preview / Validation -->
+  <g transform="translate(588,24)">
+    <rect class="panel" x="0" y="0" width="588" height="672" rx="8" />
+    <text class="title" x="20" y="34">Preview & Validation</text>
+    <text class="muted" x="20" y="56">Review parsed targets below. Use checkboxes to include/exclude before saving.</text>
+
+    <!-- summary badges -->
+    <rect x="20" y="80" width="540" height="60" rx="6" fill="#fbfbff" stroke="#eef2ff" />
+    <text class="muted" x="32" y="108">Total: 12 · Valid: 10 · Duplicates: 1 · Invalid: 1 · Overlaps: 1</text>
+
+    <!-- table header -->
+    <rect class="table-head" x="20" y="160" width="540" height="36" rx="4" />
+    <text class="muted" x="36" y="184">Target</text>
+    <text class="muted" x="320" y="184">Type</text>
+    <text class="muted" x="420" y="184">Status</text>
+
+    <!-- rows (mock) -->
+    <text x="36" y="218">192.168.1.10</text>
+    <text class="muted" x="320" y="218">IPv4</text>
+    <circle class="status-ok" cx="440" cy="213" r="8" />
+
+    <text x="36" y="248">10.10.10.0/24</text>
+    <text class="muted" x="320" y="248">CIDR</text>
+    <circle class="status-warn" cx="440" cy="243" r="8" />
+
+    <text x="36" y="278">example..com</text>
+    <text class="muted" x="320" y="278">Domain</text>
+    <circle class="status-bad" cx="440" cy="273" r="8" />
+
+    <!-- actions -->
+    <g transform="translate(20,540)">
+      <rect class="button" x="0" y="0" width="160" height="40" rx="6" />
+      <text class="btn-text" x="24" y="26">Add to Scope</text>
+    </g>
+    <g transform="translate(200,540)">
+      <rect x="0" y="0" width="160" height="40" rx="6" fill="#e5e7eb" />
+      <text class="muted" x="46" y="26">Export</text>
+    </g>
+    <g transform="translate(380,540)">
+      <rect x="0" y="0" width="160" height="40" rx="6" fill="#fff" stroke="#e5e7eb" />
+      <text class="muted" x="44" y="26">Cancel</text>
+    </g>
+  </g>
+</svg>
