@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from uuid import uuid4
 
-from sqlalchemy import DateTime, String, Text, Boolean
+from sqlalchemy import DateTime, Integer, String, Text, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -28,7 +28,7 @@ class Target(Base):
     protocol: Mapped[str | None] = mapped_column(String(20), nullable=True)
     hostname: Mapped[str | None] = mapped_column(String(255), nullable=True)
     ip: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    port: Mapped[int | None] = mapped_column(String(10), nullable=True)
+    port: Mapped[int | None] = mapped_column(Integer, nullable=True)
     path: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     environment: Mapped[str | None] = mapped_column(String(50), nullable=True)
     business_unit: Mapped[str | None] = mapped_column(String(255), nullable=True)

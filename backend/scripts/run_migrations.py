@@ -16,7 +16,9 @@ def run():
             print(f"Applying {sql.name}")
             with open(sql, "r", encoding="utf-8") as fh:
                 sql_text = fh.read()
-            conn.execute(text(sql_text))
+            statements = [statement.strip() for statement in sql_text.split(";") if statement.strip()]
+            for statement in statements:
+                conn.execute(text(statement))
         conn.commit()
 
 

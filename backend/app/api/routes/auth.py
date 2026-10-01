@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Header
 
-from app.services.auth_service import authenticate_user, create_access_token, register_user
+from app.services.auth_service import authenticate_user, create_access_token, decode_access_token, register_user
 from app.api.deps import require_permission
 
 router = APIRouter(tags=["auth"])

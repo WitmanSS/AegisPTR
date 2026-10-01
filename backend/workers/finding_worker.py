@@ -48,8 +48,9 @@ def enrich_finding(db: Session, finding_id: str) -> Dict[str, Any]:
 def run_worker():
     redis_url = os.environ.get("REDIS_URL")
     if not redis_url:
-        logger.error("REDIS_URL not configured — worker requires Redis to subscribe")
-        return
+        from app.core.config import settings
+
+        redis_url = f"redis://{settings.redis_host}:{settings.redis_port}/{getattr(settings, 'redis_db', 0)}"
 
     pub = Publisher(redis_url)
     r = pub._ensure_redis()

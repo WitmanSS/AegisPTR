@@ -11,6 +11,7 @@ from app.core.database import get_db
 from app.models.assessment import Assessment, AssessmentScope
 from app.schemas.assessment import AssessmentCreate, AssessmentRead
 from app.services.orchestrator import ToolTask, orchestrator
+from app.services.operation_scope import is_target_authorized
 
 router = APIRouter(prefix="/assessments", tags=["assessments"])
 
@@ -125,11 +126,15 @@ async def create_assessment_task(
     assessment = db.get(Assessment, assessment_id)
     if assessment is None:
         raise HTTPException(status_code=404, detail="Assessment not found")
+    if not assessment.is_authorized:
+        raise HTTPException(status_code=403, detail="Assessment scope is not authorized")
 
     tool_id = str(body.get("tool_id", "nmap")).strip()
     target = str(body.get("target", "")).strip()
     if not target:
         raise HTTPException(status_code=400, detail="Target is required")
+    if not is_target_authorized(assessment, target):
+        raise HTTPException(status_code=403, detail="Target is outside the authorized assessment scope")
 
     task = ToolTask(
         task_id=str(uuid4()),

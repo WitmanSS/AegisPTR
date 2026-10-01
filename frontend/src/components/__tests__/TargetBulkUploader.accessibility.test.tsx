@@ -19,8 +19,10 @@ test('TargetBulkUploader renders preview and modal with correct ARIA attributes'
   render(<TargetBulkUploader />)
 
   // Trigger preview
-  const previewBtn = screen.getByText('Parse Preview')
-  fireEvent.click(previewBtn)
+  fireEvent.change(screen.getByLabelText('Targets to validate'), {
+    target: { value: '1.1.1.1\nexample.com' },
+  })
+  fireEvent.click(screen.getByText('Validate scope'))
 
   // Wait for preview items to render
   await waitFor(() => expect(screen.getByText('1.1.1.1')).toBeTruthy())
@@ -31,7 +33,7 @@ test('TargetBulkUploader renders preview and modal with correct ARIA attributes'
   expect(screen.getByLabelText('Type for 1.1.1.1')).toBeInTheDocument()
 
   // Open confirmation modal
-  const addBtn = screen.getByText('Add to Scope')
+  const addBtn = screen.getByText('Add 2 to scope')
   fireEvent.click(addBtn)
 
   // Modal should appear with role dialog and labelledby

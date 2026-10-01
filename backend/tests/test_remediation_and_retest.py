@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -10,6 +11,7 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_ROOT))
 
 from app.core.database import Base, get_db
+from app.api.deps import get_current_user
 from app.main import app
 
 
@@ -31,6 +33,7 @@ def test_remediation_and_retest_workflow() -> None:
             db.close()
 
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_current_user] = lambda: SimpleNamespace(role=SimpleNamespace(name="admin"), disabled=False)
 
     try:
         client = TestClient(app)
@@ -73,12 +76,13 @@ def test_remediation_and_retest_workflow() -> None:
             },
         )
         assert findings_response.status_code == 200, findings_response.text
+        finding_id = findings_response.json()["saved"][0]["finding_id"]
 
         remediation_response = client.post(
             "/api/remediation/generate",
             json={
                 "assessment_id": assessment_id,
-                "finding_ids": ["F-001"],
+                "finding_ids": [finding_id],
                 "assignee": "app-team",
             },
         )
@@ -95,7 +99,7 @@ def test_remediation_and_retest_workflow() -> None:
             "/api/retests",
             json={
                 "assessment_id": assessment_id,
-                "finding_id": "F-001",
+                "finding_id": finding_id,
                 "retest_type": "POST_REMEDIATION",
                 "status": "PENDING",
             },

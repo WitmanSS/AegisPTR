@@ -51,7 +51,7 @@ class ToolOrchestrator:
         task.started_at = datetime.utcnow()
         await asyncio.sleep(0)
 
-        result = adapter.execute(task.target, {"fast": True})
+        result = await asyncio.to_thread(adapter.execute, task.target, {"fast": True})
         task.stdout = result.get("stdout", "")
         task.stderr = result.get("stderr", "")
         task.exit_code = result.get("returncode")

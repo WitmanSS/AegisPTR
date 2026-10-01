@@ -35,6 +35,7 @@ class KPIEngine:
     def summary(self) -> dict[str, Any]:
         return {
             "status": "ok",
+            "data_source": "static_configuration",
             "mttd_hours": self._records["mttd_hours"].value,
             "mttr_hours": self._records["mttr_hours"].value,
             "closure_rate_percent": self._records["closure_rate_percent"].value,

@@ -10,6 +10,7 @@ class FindingBase(BaseModel):
     title: str
     description: str | None = None
     category: str | None = None
+    cve: str | None = None
     severity: str = "MEDIUM"
     cvss: float | None = None
     cwe: str | None = None
